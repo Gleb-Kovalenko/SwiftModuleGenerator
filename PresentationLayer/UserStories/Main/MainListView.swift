@@ -27,7 +27,7 @@ public struct MainListView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             ZStack {
-                Color.black.ignoresSafeArea()
+                Color.primaryBg.ignoresSafeArea()
                 ReloadableView(
                     store: store.scope(
                         state: \.reloadableMainList,
@@ -37,34 +37,36 @@ public struct MainListView: View {
                         ProgressView()
                     }
                 ) {
-                    VStack(spacing: 0) {
-                        List {
-                            ForEach(TemplateGroup.allCases, id: \.self) { templateGroup in
-                                Section(templateGroup.rawValue) {
-                                    LazyVGrid(columns: columns) {
-                                        ForEachStore(
-                                            store.scope(
-                                                state: { state in
-                                                    state.mainItems.filter {
-                                                        $0.templateGroup == templateGroup
-                                                    }
-                                                },
-                                                action: MainListAction.mainItem(id:action:)
-                                            ),
-                                            content: MainItemView.init
-                                        )
+                    Ztack {
+                        VStack(spacing: 0) {
+                            List {
+                                ForEach(TemplateGroup.allCases, id: \.self) { templateGroup in
+                                    Section(templateGroup.rawValue) {
+                                        LazyVGrid(columns: columns) {
+                                            ForEachStore(
+                                                store.scope(
+                                                    state: { state in
+                                                        state.mainItems.filter {
+                                                            $0.templateGroup == templateGroup
+                                                        }
+                                                    },
+                                                    action: MainListAction.mainItem(id:action:)
+                                                ),
+                                                content: MainItemView.init
+                                            )
+                                        }
                                     }
                                 }
                             }
+                            Divider()
+                            BottomBarView(viewStore: viewStore)
+                                .padding(.horizontal, 80)
+                                .padding(.vertical, 30)
+                                .background(Color.blue.opacity(0.32))
+                                .ignoresSafeArea()
                         }
-                        Divider()
-                        BottomBarView(viewStore: viewStore)
-                            .padding(.horizontal, 100)
-                            .padding(.vertical, 50)
-                            .background(Color.gray.opacity(0.32))
-                            .ignoresSafeArea()
+                        .alert(store.scope(state: \.alert), dismiss: .alertDimissed)
                     }
-                    .alert(store.scope(state: \.alert), dismiss: .alertDimissed)
                 }
                 .disabled(viewStore.reloadableMainList.isLoaderDisplayed)
                 .onAppear {
@@ -100,7 +102,7 @@ public struct MainListView: View {
                         )
                     )
                 }
-                .frame(width: 250)
+                .frame(width: 300)
                 Spacer()
                 VStack(spacing: 10) {
                     Text("Module name")
@@ -113,7 +115,7 @@ public struct MainListView: View {
                         )
                     )
                 }
-                .frame(width: 250)
+                .frame(width: 300)
                 Spacer()
                 VStack(spacing: 20) {
                     Button {

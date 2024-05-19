@@ -22,19 +22,19 @@ public struct MainItemView: View {
     
     public var body: some View {
         WithViewStore(store) { viewStore in
-            HStack {
-                Spacer()
+            HStack(spacing: 0) {
+                Spacer(minLength: 0)
                 Text(viewStore.templateName)
                     .font(.title3)
                     .foregroundColor(.black)
-                Spacer()
+                Spacer(minLength: 0)
             }
-            .frame(height: 40)
+            .frame(height: 34)
             .background(
                 RoundedRectangle(cornerRadius: 13)
                     .fill(viewStore.isSelected ? Color.green : Color.white)
             )
-            .padding()
+            .padding(18)
             .animation(.easeInOut(duration: 0.2), value: viewStore.isSelected)
             .onTapGesture {
                 viewStore.send(.onTap)
